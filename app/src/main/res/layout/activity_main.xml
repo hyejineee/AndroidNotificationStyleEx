@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/bigPictureStyleButton"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="handleBicPictureStyleButton"
+        android:text="큰 이미지 스타일" />
+
+    <Button
+        android:id="@+id/bigTextStyleButton"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="handleBicTextStyleButton"
+        android:text="큰 텍스 스타일" />
+
+    <Button
+        android:id="@+id/inBoxStyleButton"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="handleInBoxStyleButton"
+        android:text="inBox 스타일" />
+
+    <Button
+        android:id="@+id/messagingStyleButton"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="handleMessagingStyleButton"
+        android:text="메세지 스타일" />
+
+    <Button
+        android:id="@+id/mediaStyleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="handleMediaStyleButton"
+        android:text="미디어 스타일"/>
+
+
+</LinearLayout>
