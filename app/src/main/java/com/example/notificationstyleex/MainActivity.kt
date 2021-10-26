@@ -1,17 +1,20 @@
 package com.example.notificationstyleex
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Person
+import android.app.*
+import android.content.Intent
 import android.graphics.BitmapFactory
+import android.media.MediaSession2Service
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.RemoteInput
+import androidx.media.session.MediaButtonReceiver
 import com.example.notificationstyleex.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             NotificationManagerCompat.from(this).createNotificationChannel(ch)
         }
 
-        initBuilder();
+        initBuilder()
 
     }
 
@@ -84,7 +87,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     fun handleMessagingStyleButton(v: View) {
 
         val person1 = androidx.core.app.Person.Builder().setName("hyejin").build()
@@ -106,6 +108,54 @@ class MainActivity : AppCompatActivity() {
 
     fun handleMediaStyleButton(v: View) {
 
+        val prevPendingIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(this, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+        val pausePendingIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(this, PlaybackStateCompat.ACTION_PAUSE)
+        val nextPendingIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+
+        builder
+            .setContentTitle("Wonderful music")
+            .setContentText("My Awesome Band")
+            .addAction(R.drawable.ic_baseline_skip_previous_24,"prev", prevPendingIntent)
+            .addAction(R.drawable.ic_baseline_pause_24,"pause", pausePendingIntent)
+            .addAction(R.drawable.ic_baseline_skip_next_24,"next", nextPendingIntent)
+            .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
+                .setShowActionsInCompactView(0,1,2)
+            )
+            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.cover))
+
+
+        NotificationManagerCompat.from(this).notify(3, builder.build())
+    }
+
+    fun reply(v:View){
+        val KEY_TEXT_REPLY = "key_text_reply"
+        var remoteInput = RemoteInput.Builder(KEY_TEXT_REPLY)
+            .setLabel("답장을 입력하세요.")
+            .build()
+
+        var replyPendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(applicationContext, 1000,
+                getMessageReplyIntent(1000),
+                PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val action = NotificationCompat.Action.Builder(R.drawable.ic_baseline_message_24, "REPLY", replyPendingIntent)
+            .addRemoteInput(remoteInput)
+
+        val person1 = androidx.core.app.Person.Builder().setName("hyejin").build()
+        val msg1 = NotificationCompat.MessagingStyle.Message("hi", System.currentTimeMillis(),person1)
+
+        builder
+            .setContentTitle("Message style")
+            .addAction(action.build())
+            .setStyle(
+                NotificationCompat.MessagingStyle("NotificationExApp")
+                    .addMessage(msg1)
+            )
+        NotificationManagerCompat.from(this).notify(5, builder.build())
+    }
+
+    private fun getMessageReplyIntent(conversationId: Int): Intent {
+        return Intent(this, MessageReceiver::class.java)
     }
 
     companion object {
